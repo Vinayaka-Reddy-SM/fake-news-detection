@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import { PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const Dashboard = () => {
@@ -8,10 +8,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const res = await axios.get('http://localhost:5000/api/analyze/stats', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await api.get('/analyze/stats');
         setStats(res.data);
       } catch (err) {
         console.error(err);

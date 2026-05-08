@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import toast from 'react-hot-toast';
 import { Trash2 } from 'lucide-react';
 
@@ -14,13 +14,10 @@ const History = () => {
 
   const fetchHistory = async () => {
     try {
-      const token = localStorage.getItem('token');
-      let url = 'http://localhost:5000/api/analyze/history?limit=50';
-      if (filter !== 'ALL') url += `&label=${filter}`;
+      const params = { limit: 50 };
+      if (filter !== 'ALL') params.label = filter;
       
-      const res = await axios.get(url, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.get('/analyze/history', { params });
       setHistory(res.data.data);
     } catch (err) {
       toast.error('Failed to load history');
@@ -32,10 +29,7 @@ const History = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this entry?')) return;
     try {
-      const token = localStorage.getItem('token');
-      await axios.delete(`http://localhost:5000/api/analyze/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      await api.delete(`/analyze/${id}`);
       setHistory(history.filter(h => h._id !== id));
       toast.success('Deleted successfully');
     } catch (err) {

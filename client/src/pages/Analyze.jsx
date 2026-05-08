@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import api from '../api/axios';
 import toast from 'react-hot-toast';
 
 const Analyze = () => {
@@ -15,10 +15,7 @@ const Analyze = () => {
     setLoading(true);
     setResult(null);
     try {
-      const token = localStorage.getItem('token');
-      const res = await axios.post('http://localhost:5000/api/analyze', { text }, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.post('/analyze', { text });
       setResult(res.data);
       toast.success('Analysis complete!');
     } catch (err) {

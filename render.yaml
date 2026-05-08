@@ -1,0 +1,46 @@
+services:
+  # 1. ML Microservice (Python)
+  - type: web
+    name: truthcheck-ml
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r ml-service/requirements.txt
+    startCommand: cd ml-service && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+
+  # 2. Node Backend (Express)
+  - type: web
+    name: truthcheck-api
+    env: node
+    region: oregon
+    plan: free
+    buildCommand: cd server && npm install
+    startCommand: cd server && node server.js
+    envVars:
+      - key: ML_SERVICE_URL
+        fromService:
+          name: truthcheck-ml
+          type: web
+          property: host
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+
+  # 3. React Frontend (Static Site)
+  - type: web
+    name: truthcheck-client
+    env: static
+    region: oregon
+    plan: free
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: client/dist
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: truthcheck-api
+          type: web
+          property: url
