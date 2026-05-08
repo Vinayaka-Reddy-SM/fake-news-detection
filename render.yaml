@@ -27,8 +27,11 @@ services:
           property: host
       - key: MONGO_URI
         sync: false
+        placeholder: "Paste your MongoDB Atlas connection string here"
       - key: JWT_SECRET
         generateValue: true
+      - key: NODE_VERSION
+        value: 20.10.0
 
   # 3. React Frontend (Static Site)
   - type: web
@@ -38,7 +41,6 @@ services:
     staticPublishPath: client/dist
     envVars:
       - key: VITE_API_URL
-        fromService:
-          name: truthcheck-api
-          type: web
-          property: host
+        value: https://truthcheck-api.onrender.com
+      - key: NODE_VERSION
+        value: 20.10.0
