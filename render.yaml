@@ -31,10 +31,8 @@ services:
         generateValue: true
 
   # 3. React Frontend (Static Site)
-  - type: web
+  - type: static
     name: truthcheck-client
-    env: static
-    plan: free
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: client/dist
     envVars:
