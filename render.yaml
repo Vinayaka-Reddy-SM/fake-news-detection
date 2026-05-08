@@ -34,7 +34,6 @@ services:
   - type: web
     name: truthcheck-client
     env: static
-    region: oregon
     plan: free
     buildCommand: cd client && npm install && npm run build
     staticPublishPath: client/dist
@@ -43,4 +42,4 @@ services:
         fromService:
           name: truthcheck-api
           type: web
-          property: url
+          property: host

@@ -1,7 +1,13 @@
 import axios from 'axios';
 
 const getBaseURL = () => {
-  const url = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  let url = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  
+  // If the URL is just a hostname (from Render Blueprint 'host' property)
+  if (url && !url.startsWith('http') && !url.includes('localhost')) {
+    url = `https://${url}`;
+  }
+  
   return url.endsWith('/api') ? url : `${url}/api`;
 };
 
